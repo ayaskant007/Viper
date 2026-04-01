@@ -3,44 +3,49 @@ import certifi
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
-# print(certifi.where())
-queue = ["https://google.com"]
+queue = ["https://google.com", "https://www.facebook.com", "https://www.youtube.com"]
 visited = set()
-
-full_url = urljoin(queue[0], "/services")
-
-try:
-    response = requests.get(queue[0])
-    # print(response.text)
-
-    soup = BeautifulSoup(response.text, 'html.parser')
-    title = soup.title.get_text()
-    body = soup.body
-    # print(title)
-
-    links = []
-    for link in soup.find_all('a'):
-        links.append(link.get("href"))
-        print(link.get("href"))
-
-    for i in links:
-        if i.startswith("http" or "https" or "www"):
-            print(f"full relative urls are: {i}")
-        else:
-            full_url = urljoin(queue[0], i)
-            print(f"incomplete urls such as {full_url} were fixed.")
+limit = 10
 
 
-    site_info = {
-        "title": title,
-        "body": body,
-        "links": links
-    }
+while len(queue) > 0 and len(visited) < limit:
+    url= queue.pop(0)
 
-    print(site_info)
+    if url not in visited:
+        visited.add(url)
+        print(url)
+        try:
+            response = requests.get(url, verify=certifi.where())
+            soup = BeautifulSoup(response.text, 'html.parser')
+            title = soup.title.get_text()
+            body = soup.body
 
-except Exception as e:
-    print(e)
+
+            relative_links = []
+
+            for link in soup.find_all('a'):
+                href_link = link.get("href")  # Get it once
+
+                if href_link!=None:
+                    href_link = str(href_link)
+                    if href_link.startswith(("http", "https", "www")):
+                        relative_links.append(href_link)
+                    else:
+                        full_url = urljoin(url, href_link)
+                        relative_links.append(full_url)
+
+
+            site_info = {
+                "title": title,
+                # "body": body,
+                "links": relative_links
+            }   
+
+            print(site_info)
+            queue.extend(relative_links)
+
+        except Exception as e:
+            print(e)
 
 
     
