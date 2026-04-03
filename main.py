@@ -24,8 +24,6 @@ app.add_middleware(
 
 ix = open_dir("index_dir")
 
-value= "Google"
-
 @app.get("/search")
 def search(q: str = None):  # Adding 'q' makes it dynamic!
     if q:

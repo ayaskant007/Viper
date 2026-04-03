@@ -5,6 +5,7 @@ from urllib.parse import urljoin
 from whoosh.index import create_in
 from whoosh.fields import *
 import os
+import time
 
 
 if os.path.isdir("index_dir"):
@@ -63,7 +64,7 @@ queue = [
 ]
 
 visited = set()
-limit = 10
+limit = 30
 
 
 while len(queue) > 0 and len(visited) < limit:
@@ -103,8 +104,12 @@ while len(queue) > 0 and len(visited) < limit:
             queue.extend(relative_links)
 
             writer.add_document(title=title, url=url, content=content)
-
+            
+            time.sleep(3) # Be nice to the servers and avoid getting blocked by adding a delay between requests.
         except Exception as e:
             print(e)
 
 writer.commit()
+
+#TODO: Add rotating user agents and proxy support to further reduce the chances of getting blocked by servers.
+
