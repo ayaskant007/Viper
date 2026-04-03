@@ -3,6 +3,7 @@ from whoosh.index import open_dir
 from whoosh.qparser import MultifieldParser
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from typing import Optional
 
 app = FastAPI()
 
@@ -24,8 +25,10 @@ app.add_middleware(
 
 ix = open_dir("index_dir")
 
+value= "Google"
+
 @app.get("/search")
-def search(q: str = None):  # Adding 'q' makes it dynamic!
+def search(q: Optional[str] = None):  # Adding 'q' makes it dynamic!
     if q:
         with ix.searcher() as searcher:
             query = MultifieldParser(["title", "content"], ix.schema).parse(q)

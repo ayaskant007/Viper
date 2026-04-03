@@ -3,7 +3,7 @@ import certifi
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from whoosh.index import create_in
-from whoosh.fields import *
+from whoosh.fields import Schema, ID, TEXT
 import os
 import time
 

@@ -1,38 +1,265 @@
-.App {
-  text-align: center;
+/* Core Variables */
+:root {
+  --bg-dark: #0a0a0a;
+  --surface: #171717;
+  --surface-hover: #262626;
+  --accent: #10b981;
+  --accent-glow: rgba(16, 185, 129, 0.4);
+  --text-main: #f3f4f6;
+  --text-muted: #9ca3af;
+  --border: #333333;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  margin: 0;
+  background-color: var(--bg-dark);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+/* Layout Shift Animations */
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Home Layout: Centered on screen */
+.layout-home {
+  justify-content: center;
+  align-items: center;
+}
+
+/* Results Layout: Pushed to the top */
+.layout-results {
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 40px;
+}
+
+/* Header & Logo */
+.header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  width: 100%;
+  max-width: 700px;
+  padding: 0 20px;
+}
+
+.logo {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -2px;
+  margin: 0 0 30px 0;
+  background: linear-gradient(to right, #ffffff, #a3a3a3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo span {
+  color: var(--accent);
+  background: none;
+  -webkit-text-fill-color: var(--accent);
+}
+
+/* The Search Bar */
+.search-form {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+}
+
+.search-input-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 5px 20px;
+  transition: all 0.3s ease;
+}
+
+.search-input-wrapper:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--text-muted);
+  margin-right: 12px;
+}
+
+.search-input-wrapper input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  padding: 12px 0;
+  outline: none;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.clear-btn:hover {
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* The Strike Button */
+.strike-btn {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 24px;
+  padding: 0 30px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.strike-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px var(--accent-glow);
+}
+
+.strike-btn:disabled {
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* Spinner for loading state */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(0,0,0,0.3);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Main Content Area */
+.main-content {
+  width: 100%;
+  max-width: 700px;
+  margin-top: 40px;
+  padding: 0 20px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Results Count */
+.results-count {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Individual Result Cards */
+.result-item {
+  margin-bottom: 35px;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.favicon {
+  width: 24px;
+  height: 24px;
+  background: var(--surface);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.result-url {
+  font-style: normal;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.result-link {
+  text-decoration: none;
+}
+
+.result-title {
+  color: #60a5fa; /* A Google-ish blue, but muted for dark mode */
+  font-size: 1.4rem;
+  margin: 0 0 6px 0;
+  font-weight: 500;
+}
+
+.result-link:hover .result-title {
+  text-decoration: underline;
+}
+
+.result-snippet {
+  margin: 0;
+  color: var(--text-main);
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+/* Skeleton Loading (The pulsing effect) */
+.skeleton-card {
+  margin-bottom: 35px;
+}
+
+.skeleton-header, .skeleton-title, .skeleton-desc {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-hover) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: pulse 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-header { width: 40%; height: 20px; margin-bottom: 10px; }
+.skeleton-title { width: 80%; height: 28px; margin-bottom: 10px; }
+.skeleton-desc { width: 100%; height: 40px; }
+
+@keyframes pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.no-results {
+  text-align: center;
+  padding: 50px 0;
+  color: var(--text-muted);
 }
